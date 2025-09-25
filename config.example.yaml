@@ -1,0 +1,102 @@
+# CF-PVE Configuration File
+# Copy this file to ~/.cf-pve/config.yaml and customize
+
+version: "1.0"
+
+# Cloudflare settings
+cloudflare:
+  # Get your API token from: https://dash.cloudflare.com/profile/api-tokens
+  # Required permissions: Zone:Zone:Read, Zone:DNS:Edit, Account:Cloudflare Tunnel:Edit
+  api_token: "${CF_API_TOKEN}"
+  
+  # Zone ID from your domain overview page
+  zone_id: "${CF_ZONE_ID}"
+  
+  # Account ID (optional, found in right sidebar of dashboard)
+  account_id: "${CF_ACCOUNT_ID}"
+  
+  # Default TTL for DNS records (seconds)
+  default_ttl: 300
+  
+  # Enable Cloudflare proxy (orange cloud)
+  proxy_enabled: true
+
+# Proxmox VE settings
+proxmox:
+  # Proxmox host (IP or FQDN)
+  host: "pve.local.domain"
+  
+  # Proxmox web interface port
+  port: 8006
+  
+  # Username (user@realm format)
+  username: "cf-pve@pve"
+  
+  # Authentication: Use either password OR token (token recommended)
+  
+  # Option 1: Password authentication
+  password: "${PVE_PASSWORD}"
+  
+  # Option 2: API Token authentication (recommended)
+  # Create token at: Datacenter → Permissions → API Tokens
+  token_name: "cf-pve-token"
+  token_value: "${PVE_TOKEN}"
+  
+  # SSL certificate verification
+  verify_ssl: false
+  
+  # Request timeout in seconds
+  timeout: 30
+
+# Tunnel settings
+tunnel:
+  # Default tunnel name
+  default_name: "main-tunnel"
+  
+  # Cloudflared configuration directory
+  config_path: "/etc/cloudflared/"
+  
+  # Automatically create tunnel if it doesn't exist
+  auto_create: true
+  
+  # Automatically start tunnel after creation
+  auto_start: true
+
+# DNS settings
+dns:
+  # Default DNS zone (optional, uses cloudflare.zone_id if not set)
+  zone: "example.com"
+  
+  # Automatically cleanup unused DNS records when hiding services
+  auto_cleanup: true
+  
+  # Backup DNS records before making changes
+  backup_records: false
+
+# Logging settings
+logging:
+  # Log level: DEBUG, INFO, WARNING, ERROR
+  level: "INFO"
+  
+  # Log file path (optional, logs to console if not set)
+  file: "~/.cf-pve/logs/cf-pve.log"
+  
+  # Maximum log file size in MB
+  max_size_mb: 10
+  
+  # Number of backup log files to keep
+  backup_count: 5
+
+# Environment Variables Reference:
+# 
+# CF_API_TOKEN     - Cloudflare API token
+# CF_ZONE_ID       - Cloudflare Zone ID  
+# CF_ACCOUNT_ID    - Cloudflare Account ID (optional)
+# PVE_PASSWORD     - Proxmox password (if using password auth)
+# PVE_TOKEN        - Proxmox API token (if using token auth)
+#
+# Set these in your shell profile (~/.bashrc, ~/.zshrc) or use a .env file:
+#
+# export CF_API_TOKEN="your_cloudflare_token_here"
+# export CF_ZONE_ID="your_zone_id_here" 
+# export PVE_TOKEN="your_proxmox_token_here"
